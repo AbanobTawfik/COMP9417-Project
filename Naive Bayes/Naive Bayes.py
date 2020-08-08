@@ -80,7 +80,9 @@ def get_local_accuracy(features, target, model, name):
     classifier.fit(selected_train_features, train_target)
     test_results = classifier.predict(selected_test_features)
     accuracy = accuracy_score(test_results, test_target)
-    print("The accuracy of " + name + " was " + str(accuracy*100) + "%")
+    scores = cross_val_score(classifier, features, target, cv = 5)
+    print("Accuracy using 5 cross validaiton: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
+    print("The accuracy of " + name + " using test/train split was " + str(accuracy*100) + "%")
 
 
 def classify_nb(model, filename):
