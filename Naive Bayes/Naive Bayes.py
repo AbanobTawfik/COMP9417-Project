@@ -5,6 +5,8 @@ import csv
 from csv import reader
 from csv import writer
 from sklearn import preprocessing
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.naive_bayes import BernoulliNB
 from sklearn.naive_bayes import MultinomialNB
@@ -71,12 +73,22 @@ def feature_select_topk(train_features, train_target, test_features, k):
 
     return new_train_features, new_test_features
 
+def get_local_accuracy(features, target, model, name):
+    train_features, test_features, train_target, test_target = train_test_split(features, target, test_size=0.2, random_state=50)
+    selected_train_features, selected_test_features = feature_select_topk(train_features, train_target, test_features, 30)
+    classifier = model
+    classifier.fit(selected_train_features, train_target)
+    test_results = classifier.predict(selected_test_features)
+    accuracy = accuracy_score(test_results, test_target)
+    print("The accuracy of " + name + " was " + str(accuracy*100) + "%")
+
 
 def classify_nb(model, filename):
     train_features, train_target = get_train_data("../Data/train.csv")
     test_features = get_test_data("../Data/test.csv")
     selected_train_features, selected_test_features = feature_select_topk(train_features, train_target, test_features, 20)
     classifier = model
+    get_local_accuracy(train_features, train_target, model, filename)
     classifier.fit(selected_train_features, train_target)
     test_result = classifier.predict(selected_test_features)
     print(test_result)
