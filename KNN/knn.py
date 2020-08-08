@@ -6,6 +6,7 @@ import csv
 from csv import reader
 from csv import writer
 from sklearn import preprocessing
+from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import accuracy_score
 from sklearn.ensemble import RandomForestClassifier
@@ -49,6 +50,7 @@ def save_test_results(filepath, test_features, test_results):
             out_row[int(row[-1]) - 1] = 1
             writer.writerow([i + 1] + out_row)
 
+
 def feature_select_topk(train_features, train_target, test_features, k):
     feature_importance_classifier = RandomForestClassifier(n_estimators=100)
     feature_importance_classifier.fit(train_features, train_target)
@@ -64,19 +66,27 @@ def feature_select_topk(train_features, train_target, test_features, k):
 
     return new_train_features, new_test_features
 
+def get_local_accuracy(features, target, neighbors):
+    train_features, test_features, train_target, test_target = train_test_split(features, target, test_size=0.2, random_state=50)
+    selected_train_features, selected_test_features = feature_select_topk(train_features, train_target, test_features, 30)
+    classifier = KNeighborsClassifier(n_neighbors=neighbors)
+    classifier.fit(selected_train_features, train_target)
+    test_results = classifier.predict(selected_test_features)
+    accuracy = accuracy_score(test_results, test_target)
+    print("The accuracy of KNN was " + str(accuracy*100) + "%")
         
-
 def classify_knn(neighbors):
     train_features, train_target = get_train_data("../Data/train.csv")
     test_features = get_test_data("../Data/test.csv")
     classifier = KNeighborsClassifier(n_neighbors=neighbors)
-    selected_train_features, selected_test_features = feature_select_topk(train_features, train_target, test_features, 20)
+    get_local_accuracy(train_features, train_target, neighbors)
+    selected_train_features, selected_test_features = feature_select_topk(train_features, train_target, test_features, 30)
     classifier.fit(selected_train_features, train_target)
     test_result = classifier.predict(selected_test_features)
     save_test_results("Results/KNN_"+str(neighbors)+".csv", test_features, test_result)
 
 
-classify_knn(244)
+classify_knn(243)
 # classify_knn(3000)
 
 # for i in range(100, 3100, 100):
