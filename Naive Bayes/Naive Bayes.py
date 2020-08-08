@@ -8,6 +8,7 @@ from sklearn import preprocessing
 from sklearn.naive_bayes import GaussianNB
 from sklearn.naive_bayes import BernoulliNB
 from sklearn.naive_bayes import MultinomialNB
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
 
 def get_train_data(filepath):
@@ -55,17 +56,32 @@ def create_submit_file(model, file_path, test_features):
             entry = [int(i + 1)] + [val for val in row]
             writer.writerow(entry)
 
+def feature_select_topk(train_features, train_target, test_features, k):
+    feature_importance_classifier = RandomForestClassifier(n_estimators=100)
+    feature_importance_classifier.fit(train_features, train_target)
+    imp_feature = feature_importance_classifier.feature_importances_
+    indices = np.argsort(imp_feature)[::-1]
+    new_train_features = pd.DataFrame(train_features.iloc[:,indices[0]])
+    new_test_features = pd.DataFrame(test_features.iloc[:,indices[0]])
+    for i in range (1, k):
+        train_feature = train_features.iloc[:,indices[i]]
+        new_train_features = new_train_features.join(train_feature)
+        test_feature = test_features.iloc[:, indices[i]]
+        new_test_features = new_test_features.join(test_feature)
+
+    return new_train_features, new_test_features
 
 
 def classify_nb(model, filename):
     train_features, train_target = get_train_data("../Data/train.csv")
     test_features = get_test_data("../Data/test.csv")
+    selected_train_features, selected_test_features = feature_select_topk(train_features, train_target, test_features, 20)
     classifier = model
-    classifier.fit(train_features, train_target)
-    test_result = classifier.predict(test_features)
+    classifier.fit(selected_train_features, train_target)
+    test_result = classifier.predict(selected_test_features)
     print(test_result)
     # create_test_result_output_file("Results/Naive_Bayes_"+str(neighbors)+".csv", test_features, test_result)
-    create_submit_file(classifier, "Results/"+filename+".csv", test_features)
+    create_submit_file(classifier, "Results/"+filename+".csv", selected_test_features)
 
 gnb = GaussianNB()
 bnb = BernoulliNB()
