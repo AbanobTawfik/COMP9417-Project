@@ -85,7 +85,7 @@ graph
 
 
 # Creating random forest classifier
-orf = RandomForestClassifier(n_estimators=100)
+orf = RandomForestClassifier(n_estimators=100, max_depth=50)
 get_local_accuracy(train_x, train_y, orf)
 orf.fit(train_x, train_y)
 y_pred_rf = orf.predict_proba(test_x)
