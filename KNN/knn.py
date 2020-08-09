@@ -28,6 +28,12 @@ def get_test_data(filepath):
     features = entries.iloc[:, :]
     return features
 
+# This function will take in the test features, and test outcome and output
+# the competition formatted csv file to the filepath supplied.
+# first we check if the Results directory exists, if not create it
+# next we append the test results onto our test features
+# finally we write each row in our newly appended test dataframe to the csv file
+# this function supplies us with the test.csv file having the results of the test appended
 def save_test_results(filepath, test_features, test_results):
     # get all test data and append to end the result
     rows = np.shape(test_features)[0]
@@ -51,7 +57,11 @@ def save_test_results(filepath, test_features, test_results):
             out_row[int(row[-1]) - 1] = 1
             writer.writerow([i + 1] + out_row)
 
-
+# This function will return the k-resized training features and test features,
+# first we create a random forest classifier as our feature importance classifier
+# next we use the inbuilt feature_importances_ function that gives the list of features and a score relating to their importance
+# we initialise a new dataframe using the top feature as our first new feature
+# finally we add from the 2nd -> kth best feature columns from our original train and test set to our new feature selected return set
 def feature_select_topk(train_features, train_target, test_features, k):
     feature_importance_classifier = RandomForestClassifier(n_estimators=100)
     feature_importance_classifier.fit(train_features, train_target)
@@ -67,6 +77,15 @@ def feature_select_topk(train_features, train_target, test_features, k):
 
     return new_train_features, new_test_features
 
+# this function will return the accuracy using 2 different techniques
+# first method we will split the training set into an 80% training 20% validation set, whilst splitting at random
+# next we will perform feature selection on our new test/validation set (see feature_select_topk)
+# next we will create the same classifier we had used in our model, and fit the train/validaiton set
+# finally we will compare the validation set results to the known results in our split
+
+# second method we will use K-cross-fold validation using sci-kit package
+# the method returns an array of scores from K-cross-fold validation
+# we use this array to get the mean score, and the variance
 def get_local_accuracy(features, target, neighbors):
     train_features, test_features, train_target, test_target = train_test_split(features, target, test_size=0.2, random_state=50)
     selected_train_features, selected_test_features = feature_select_topk(train_features, train_target, test_features, 30)
@@ -90,7 +109,7 @@ def classify_knn(neighbors):
 
 
 classify_knn(243)
-# classify_knn(3000)
+classify_knn(3000)
 
-# for i in range(100, 3100, 100):
-#     classify_knn(i)
+for i in range(100, 3100, 100):
+    classify_knn(i)

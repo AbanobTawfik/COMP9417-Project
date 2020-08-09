@@ -28,7 +28,8 @@ def get_test_data(filepath):
     entries.dropna(axis=0, how='any', inplace=True)
     features = entries.iloc[:, :]
     return features
-
+    
+# see KNN.py in the 'KNN' folder for a description of this function
 def create_test_result_output_file(filepath, test_features, test_results):
     # get all test data and append to end the result
     rows = np.shape(test_features)[0]
@@ -59,6 +60,7 @@ def create_submit_file(model, file_path, test_features):
             entry = [int(i + 1)] + [val for val in row]
             writer.writerow(entry)
 
+# see KNN.py in the 'KNN' folder for a description of this function
 def feature_select_topk(train_features, train_target, test_features, k):
     feature_importance_classifier = RandomForestClassifier(n_estimators=100)
     feature_importance_classifier.fit(train_features, train_target)
@@ -74,6 +76,7 @@ def feature_select_topk(train_features, train_target, test_features, k):
 
     return new_train_features, new_test_features
 
+# see KNN.py in the 'KNN' folder for a description of this function
 def get_local_accuracy(features, target, model, name):
     train_features, test_features, train_target, test_target = train_test_split(features, target, test_size=0.2, random_state=50)
     selected_train_features, selected_test_features = feature_select_topk(train_features, train_target, test_features, 30)

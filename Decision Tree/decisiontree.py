@@ -22,6 +22,7 @@ import graphviz
 if not os.path.exists('Results'):
     os.makedirs('Results')
 
+# see KNN.py in the 'KNN' folder for a description of this function
 def get_local_accuracy(features, target, model):
     train_features, test_features, train_target, test_target = train_test_split(features, target, test_size=0.2, random_state=50)
     model.fit(train_features, train_target)

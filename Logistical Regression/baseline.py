@@ -43,7 +43,7 @@ model.fit(train_x, train_y)
 y_pred = model.predict_proba(test_x)
 y_pred = np.vectorize(lambda x: round(x, 4))(y_pred)
 
-
+# see KNN.py in the 'KNN' folder for a description of this function
 def get_local_accuracy(features, target):
     train_features, test_features, train_target, test_target = train_test_split(features, target, test_size=0.2, random_state=50)
     classifier = LogisticRegression()
