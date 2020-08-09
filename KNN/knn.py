@@ -68,15 +68,15 @@ def feature_select_topk(train_features, train_target, test_features, k):
     return new_train_features, new_test_features
 
 def get_local_accuracy(features, target, neighbors):
-    # train_features, test_features, train_target, test_target = train_test_split(features, target, test_size=0.2, random_state=50)
-    # selected_train_features, selected_test_features = feature_select_topk(train_features, train_target, test_features, 30)
+    train_features, test_features, train_target, test_target = train_test_split(features, target, test_size=0.2, random_state=50)
+    selected_train_features, selected_test_features = feature_select_topk(train_features, train_target, test_features, 30)
     classifier = KNeighborsClassifier(n_neighbors=neighbors)
-    # classifier.fit(selected_train_features, train_target)
-    # test_results = classifier.predict(selected_test_features)
-    # accuracy = accuracy_score(test_results, test_target)
+    classifier.fit(selected_train_features, train_target)
+    test_results = classifier.predict(selected_test_features)
+    accuracy = accuracy_score(test_results, test_target)
     scores = cross_val_score(classifier, features, target, cv = 5)
     print("Accuracy using 5 cross validaiton: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
-    # print("The accuracy of KNN using train, test split " + str(accuracy*100) + "%")
+    print("The accuracy of KNN using train, test split " + str(accuracy*100) + "%")
         
 def classify_knn(neighbors):
     train_features, train_target = get_train_data("../Data/train.csv")
