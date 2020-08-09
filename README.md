@@ -6,3 +6,26 @@ The following methods are tested:
 * K-Nearest Neighbours
 * Decision Trees
 * Naive Bayes
+
+# Running The Code
+we are assuming you are running the code using python 3.6.9 (64-bit) and have the following packages installed
+* pip install numpy
+* pip install pandas
+* pip install scikit-learn
+
+to run a specific model, go to the specific folder and run the python file. This will 
+1. output the accuracy of the model using a simple test_validation_split with 80% of the data
+2. output the accuracy of the model using K-Fold-Cross Validation with 5 folds
+3. create a folder named results which will output a csv file containing the results and probability of each class output for the model
+
+# Data
+* The training data is located in the Data folder under "training.csv" it contains 61,878 rows of data and 93 features and 1 target class
+* The test data is located in the Data folder under "test.csv" it contains 144,368 rows of data and 93 features
+
+Due to the large Number of features we had also included code to select top k features in a function called get_top_featuresk located in 'naive bayes'.py and KNN.py. 
+
+Contributors
+Abanob Tawfik z5075490
+Riley Sutton z
+Irene Lee z
+Daniel Gordos z
