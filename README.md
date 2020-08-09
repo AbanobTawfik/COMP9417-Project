@@ -25,7 +25,7 @@ to run a specific model, go to the specific folder and run the python file. This
 Due to the large Number of features we had also included code to select top k features in a function called get_top_featuresk located in 'naive bayes'.py and KNN.py. 
 
 Contributors
-Abanob Tawfik z5075490
-Riley Sutton z
-Irene Lee z
-Daniel Gordos z
+* Abanob Tawfik z5075490
+* Riley Sutton z5164867
+* Nayeon Lee z5164405
+* Daniel Gordos z5208992
